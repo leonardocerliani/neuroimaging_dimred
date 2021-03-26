@@ -1,1 +1,4 @@
 rsconnect
+.DS_Store
+.RData
+.Rhistory
