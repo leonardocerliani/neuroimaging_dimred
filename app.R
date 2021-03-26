@@ -13,15 +13,17 @@ options(digits = 2)
 
 N = 30
 
+# A is here for "activity"
+A <- function(mu) rnorm(N, mean = mu)
+
 df <- tibble(
   task = c(rep("Execution",N), rep("Motion",N), rep("Scrambled",N)) %>% as.factor(),
-  GM_BA1  = c(rnorm(N,3), rnorm(N,0), rnorm(N,0)),
-  GM_BA44 = c(rnorm(N,0), rnorm(N,3), rnorm(N,0)),
-  GM_Ins  = c(rnorm(N,0), rnorm(N,0), rnorm(N,3)),
-  GM_SI   = c(rnorm(N,2), rnorm(N,0), rnorm(N,0)),
-  GM_SPL   = c(rnorm(N,2), rnorm(N,0), rnorm(N,0)),
-  GM_IPL   = c(rnorm(N,3), rnorm(N,3), rnorm(N,3))
-  
+  GM_BA1  = c(A(2), A(2), A(5)),
+  GM_BA44 = c(A(2), A(2), A(5)),
+  GM_Ins  = c(A(2), A(3), A(5)),
+  GM_SI   = c(A(5), A(2), A(2)),
+  GM_SPL  = c(A(5), A(2), A(2)),
+  GM_IPL  = c(A(5), A(3), A(2))
 )
 # image(df %>% select(contains("GM")) %>% as.matrix())
 
@@ -166,11 +168,11 @@ do_dimred <- function(df, method) {
            pcs <- list(mds$points[,1], mds$points[,2])
          },
          umap = {
-           u <- umap(vals)
+           u <- umap(dist(vals))
            pcs <- list(u[,1], u[,2])
          },
          tsne = {
-           tsne <- Rtsne(vals, dims = 2, perplexity = 15)
+           tsne <- Rtsne(dist(vals), dims = 2, perplexity = 10)
            pcs <- list(tsne$Y[,1], tsne$Y[,2])
          }
   )    
